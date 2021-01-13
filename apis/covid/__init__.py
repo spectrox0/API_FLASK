@@ -31,18 +31,18 @@ class CovidDeaths(Resource):
     def get(self):
         # Import datasets as pandas dataframes
         raw_data_confirmed = pd.read_csv(confirmed_cases_data_url)
-        raw_data_deaths = pd.read_csv(death_cases_data_url)
-        raw_data_recovered = pd.read_csv(recovery_cases_data_url)
+       # raw_data_deaths = pd.read_csv(death_cases_data_url)
+      #  raw_data_recovered = pd.read_csv(recovery_cases_data_url)
 
         confirmed = convert_dataframe(raw_data_confirmed)
-        deaths = convert_dataframe(raw_data_deaths)
-        recovered = convert_dataframe(raw_data_recovered)
+       # deaths = convert_dataframe(raw_data_deaths)
+        #recovered = convert_dataframe(raw_data_recovered)
 
         response = {
             'confirmed': confirmed.to_json(),
             'index_confirmed': [str(item) for item in list(confirmed.index)],
-            'deaths': deaths.to_json(),
-            'recovered': recovered.to_json()
+          #  'deaths': deaths.to_json(),
+           # 'recovered': recovered.to_json()
         }
         return response
 
