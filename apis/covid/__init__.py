@@ -40,6 +40,7 @@ class CovidDeaths(Resource):
 
         response = {
             'confirmed': confirmed.to_json(),
+            'index_confirmed': confirmed.index,
             'deaths': deaths.to_json(),
             'recovered': recovered.to_json()
         }
