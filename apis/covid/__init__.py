@@ -12,10 +12,15 @@ death_cases_data_url = base_url_api_covid + 'time_series_covid19_deaths_global.c
 recovery_cases_data_url = base_url_api_covid + 'time_series_covid19_recovered_global.csv'
 
 
-def convert_dataframe(raw_data):
+def convert_dataframe(raw_data, list_countries=None, days=30):
+    if list_countries is None:
+        list_countries = ['Venezuela', 'Colombia', 'Argentina', 'Uruguay', 'Brazil', 'Chile', 'Ecuador', 'Peru',
+                          'Mexico', 'Spain']
+
     df = raw_data.groupby('Country/Region').sum().drop(['Lat', 'Long'], axis=1).transpose()
     df.set_index(pd.DatetimeIndex(df.index), inplace=True)
-    return df
+    return df[list_countries].last(f'{days}D')
+
 
 class Test(Resource):
     def get(self):
@@ -33,12 +38,12 @@ class CovidDeaths(Resource):
         deaths = convert_dataframe(raw_data_deaths)
         recovered = convert_dataframe(raw_data_recovered)
 
-        covid = {
+        response = {
             'confirmed': confirmed.to_json(),
             'deaths': deaths.to_json(),
             'recovered': recovered.to_json()
         }
-        return covid
+        return response
 
     def post(self):
         body = request.get_json()
