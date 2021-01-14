@@ -19,7 +19,9 @@ def convert_dataframe(raw_data, list_countries=None, days=30):
 
     df = raw_data.groupby('Country/Region').sum().drop(['Lat', 'Long'], axis=1).transpose()
     df.set_index(pd.DatetimeIndex(df.index), inplace=True)
-    return df[list_countries].last(f'{days}D')
+    df = df.resample('M').sum()  #convert monthly
+    return df[list_countries]
+    #df.groupby(df['date'].dt.strftime('%B'))['Revenue'].sum().sort_values()
 
 
 class Test(Resource):
