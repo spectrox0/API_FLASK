@@ -18,7 +18,8 @@ def convert_dataframe(raw_data, list_countries=None, days=30):
                           'Mexico', 'Spain']
 
     df = raw_data.groupby('Country/Region').sum().drop(['Lat', 'Long'], axis=1).transpose()
-    df.set_index(pd.DatetimeIndex(df.index), inplace=True)    df = df.resample('M').sum()  # convert monthly
+    df.set_index(pd.DatetimeIndex(df.index), inplace=True)
+    df = df.resample('M').sum()  # convert monthly
     # df = df.sort_values(by='country', ascending=False, axis=0)
     df = df[:-1]
     print(df.head())
