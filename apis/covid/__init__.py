@@ -18,10 +18,12 @@ def convert_dataframe(raw_data, list_countries=None, days=30):
                           'Mexico', 'Spain']
 
     df = raw_data.groupby('Country/Region').sum().drop(['Lat', 'Long'], axis=1).transpose()
-    df.set_index(pd.DatetimeIndex(df.index), inplace=True)
-    df = df.resample('M').sum()  #convert monthly
+    df.set_index(pd.DatetimeIndex(df.index), inplace=True)    df = df.resample('M').sum()  # convert monthly
+    # df = df.sort_values(by='country', ascending=False, axis=0)
+    df = df[:-1]
+    print(df.head())
     return df[list_countries]
-    #df.groupby(df['date'].dt.strftime('%B'))['Revenue'].sum().sort_values()
+    # df.groupby(df['date'].dt.strftime('%B'))['Revenue'].sum().sort_values()
 
 
 class Test(Resource):
@@ -33,18 +35,18 @@ class CovidDeaths(Resource):
     def get(self):
         # Import datasets as pandas dataframes
         raw_data_confirmed = pd.read_csv(confirmed_cases_data_url)
-       # raw_data_deaths = pd.read_csv(death_cases_data_url)
-      #  raw_data_recovered = pd.read_csv(recovery_cases_data_url)
+        # raw_data_deaths = pd.read_csv(death_cases_data_url)
+        #  raw_data_recovered = pd.read_csv(recovery_cases_data_url)
 
         confirmed = convert_dataframe(raw_data_confirmed)
-       # deaths = convert_dataframe(raw_data_deaths)
-        #recovered = convert_dataframe(raw_data_recovered)
+        # deaths = convert_dataframe(raw_data_deaths)
+        # recovered = convert_dataframe(raw_data_recovered)
 
         response = {
             'confirmed': confirmed.to_json(),
             'index_confirmed': [str(item) for item in list(confirmed.index)],
-          #  'deaths': deaths.to_json(),
-           # 'recovered': recovered.to_json()
+            #  'deaths': deaths.to_json(),
+            # 'recovered': recovered.to_json()
         }
         return response
 
